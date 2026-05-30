@@ -1,15 +1,11 @@
-# =========================
 # OS / Editor
-# =========================
 .DS_Store
 Thumbs.db
 desktop.ini
 .vscode/
 .idea/
 
-# =========================
 # Python
-# =========================
 __pycache__/
 *.pyc
 *.pyo
@@ -19,22 +15,17 @@ __pycache__/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# =========================
 # Virtual environments
-# =========================
 .venv/
 venv/
 env/
 ENV/
 conda-env/
 
-# =========================
-# Secrets / configs
-# =========================
+# Secrets
 .env
 .env.*
 !.env.example
-
 config.json
 *config.local.json
 *secret*.json
@@ -42,17 +33,13 @@ config.json
 api_keys.*
 credentials.*
 
-# =========================
 # Logs
-# =========================
 *.log
 nohup.out
 logs/
 log/
 
-# =========================
-# Generated datasets
-# =========================
+# Data
 *.npz
 *.npy
 *.pkl
@@ -72,9 +59,7 @@ datasets/*
 !datasets/README.md
 !datasets/.gitkeep
 
-# =========================
 # Trained models / scalers
-# =========================
 *.joblib
 *.pkl
 *.pickle
@@ -96,17 +81,13 @@ weights/*
 !weights/README.md
 !weights/.gitkeep
 
-# =========================
 # Experiment outputs
-# =========================
-experiments/
+experiments/*
+!experiments/README.md
+!experiments/.gitkeep
+
 experiments_deep/
 experiments_interval/
-
-# Keep documentation if you create it
-!experiments/README.md
-!experiments_deep/README.md
-!experiments_interval/README.md
 
 runs/
 outputs/
@@ -123,9 +104,7 @@ results/tmp/
 results/runs/
 results/outputs/
 
-# =========================
-# Large archives
-# =========================
+# Archives
 *.zip
 *.tar
 *.tar.gz
@@ -133,9 +112,7 @@ results/outputs/
 *.rar
 *.7z
 
-# =========================
-# Web/app cache
-# =========================
+# Flask
 .flaskenv
 instance/
 *.db
