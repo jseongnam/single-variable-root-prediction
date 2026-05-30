@@ -1,0 +1,142 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #f4f6f8;
+    font-family: Arial, "Noto Sans KR", sans-serif;
+    color: #222;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 20px;
+}
+
+header {
+    margin-bottom: 28px;
+}
+
+header h1 {
+    margin-bottom: 8px;
+    font-size: 28px;
+}
+
+header p {
+    color: #555;
+    font-size: 15px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 22px;
+}
+
+.hint {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+code {
+    background: #eef1f5;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    align-items: center;
+}
+
+.input-row label {
+    font-size: 14px;
+    color: #374151;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 11px;
+    font-size: 15px;
+    border: 1px solid #ccd3dc;
+    border-radius: 8px;
+}
+
+.input-row button {
+    padding: 12px 20px;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+.input-row button:hover {
+    background: #1d4ed8;
+}
+
+.result-box {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 10px;
+    min-height: 30px;
+}
+
+.success {
+    color: #111827;
+}
+
+.error {
+    color: #b91c1c;
+    font-weight: bold;
+}
+
+.big-number {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+table th,
+table td {
+    border: 1px solid #e5e7eb;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background: #f3f4f6;
+}
+
+.function-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.function-badge {
+    display: inline-block;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: #e0ecff;
+    color: #1d4ed8;
+    font-size: 14px;
+}

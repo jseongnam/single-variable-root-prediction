@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Branch-aware 합성 함수 근 예측 시스템</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Branch-aware 합성 함수 근 예측 시스템</h1>
+        <p>
+            구간 예측기와 함수별 회귀 모델을 결합하여
+            단일 변수 합성방정식의 근 후보를 예측합니다.
+        </p>
+    </header>
+
+    <section class="card">
+        <h2>1. 합성방정식 근 예측</h2>
+
+        <p class="hint">
+            예시 1: <code>sin(x)=0.5</code><br>
+            예시 2: <code>cos(x)=0.5</code><br>
+            예시 3: <code>tanh(sin(x))=0.3</code>
+        </p>
+
+        <div class="input-row">
+            <label>방정식</label>
+            <input
+                type="text"
+                id="equationInput"
+                value="sin(x)=0.5"
+                placeholder="예: sin(x)=0.5"
+            >
+        </div>
+
+        <div class="input-row">
+            <label>x 최소</label>
+            <input type="number" step="any" id="xMinInput" value="-12.566370614359172">
+
+            <label>x 최대</label>
+            <input type="number" step="any" id="xMaxInput" value="12.566370614359172">
+        </div>
+
+        <div class="input-row">
+            <label>Top-K</label>
+            <input type="number" id="topKInput" value="5">
+
+            <label>Residual tol</label>
+            <input type="number" step="any" id="tolInput" value="0.01">
+
+            <button onclick="solveEquation()">Predict</button>
+        </div>
+
+        <div id="solveResult" class="result-box"></div>
+    </section>
+
+    <section class="card">
+        <h2>2. 모델 상태</h2>
+        <p>
+            Branch predictor loaded:
+            <strong>{{ branch_predictor_loaded }}</strong>
+        </p>
+
+        <div class="function-list">
+            {% for fname in loaded_functions %}
+                <span class="function-badge">{{ fname }}</span>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<script>
+async function solveEquation() {
+    const equation = document.getElementById("equationInput").value;
+    const x_search_min = parseFloat(document.getElementById("xMinInput").value);
+    const x_search_max = parseFloat(document.getElementById("xMaxInput").value);
+    const top_k = parseInt(document.getElementById("topKInput").value);
+    const residual_tol = parseFloat(document.getElementById("tolInput").value);
+
+    const resultBox = document.getElementById("solveResult");
+    resultBox.innerHTML = "계산 중...";
+
+    try {
+        const response = await fetch("/api/solve", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                equation,
+                x_search_min,
+                x_search_max,
+                top_k,
+                residual_tol
+            })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            resultBox.innerHTML = `<div class="error">오류: ${data.error}</div>`;
+            return;
+        }
+
+        const result = data.result;
+
+        let html = `
+            <div class="success">
+                <h3>결과</h3>
+                <p><strong>입력 방정식:</strong> ${result.equation}</p>
+                <p><strong>함수 체인:</strong> ${result.chain_inner_to_outer.join(" → ")}</p>
+                <p><strong>탐색 범위:</strong> [${result.x_search_min}, ${result.x_search_max}]</p>
+                <p><strong>후보 수:</strong> ${result.num_candidates}</p>
+        `;
+
+        if (result.best_candidate) {
+            html += `
+                <p><strong>최적 근 후보:</strong>
+                    <span class="big-number">${result.best_candidate.predicted_root}</span>
+                </p>
+                <p><strong>Residual:</strong> ${result.best_candidate.residual}</p>
+                <p><strong>Accepted:</strong> ${result.best_candidate.accepted}</p>
+            `;
+        } else {
+            html += `<p class="error">유효한 후보를 찾지 못했습니다.</p>`;
+        }
+
+        html += `</div>`;
+
+        html += `
+            <h4>근 후보 목록</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>x 후보</th>
+                        <th>F(x)</th>
+                        <th>Residual</th>
+                        <th>Accepted</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        result.candidates.forEach((cand, idx) => {
+            html += `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td>${cand.predicted_root}</td>
+                    <td>${cand.evaluated_value}</td>
+                    <td>${cand.residual}</td>
+                    <td>${cand.accepted}</td>
+                </tr>
+            `;
+        });
+
+        html += `
+                </tbody>
+            </table>
+        `;
+
+        if (result.best_candidate) {
+            html += `
+                <h4>최적 후보 계산 단계</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>단계</th>
+                            <th>원 함수</th>
+                            <th>역함수</th>
+                            <th>입력</th>
+                            <th>Branch</th>
+                            <th>Branch Score</th>
+                            <th>출력</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            result.best_candidate.steps.forEach((step, idx) => {
+                html += `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td>${step.original_function}</td>
+                        <td>${step.inverse_function}</td>
+                        <td>${step.input}</td>
+                        <td>${step.branch_id ?? "-"}</td>
+                        <td>${step.branch_score ?? "-"}</td>
+                        <td>${step.output}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+        }
+
+        resultBox.innerHTML = html;
+
+    } catch (error) {
+        resultBox.innerHTML = `<div class="error">요청 실패: ${error}</div>`;
+    }
+}
+</script>
+</body>
+</html>

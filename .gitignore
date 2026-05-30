@@ -1,0 +1,143 @@
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# =========================
+# Virtual environments
+# =========================
+.venv/
+venv/
+env/
+ENV/
+conda-env/
+
+# =========================
+# Secrets / configs
+# =========================
+.env
+.env.*
+!.env.example
+
+config.json
+*config.local.json
+*secret*.json
+*key*.json
+api_keys.*
+credentials.*
+
+# =========================
+# Logs
+# =========================
+*.log
+nohup.out
+logs/
+log/
+
+# =========================
+# Generated datasets
+# =========================
+*.npz
+*.npy
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.mat
+*.csv
+*.tsv
+*.jsonl
+
+data/*
+!data/README.md
+!data/.gitkeep
+
+datasets/*
+!datasets/README.md
+!datasets/.gitkeep
+
+# =========================
+# Trained models / scalers
+# =========================
+*.joblib
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.safetensors
+
+models/*
+!models/README.md
+!models/.gitkeep
+
+checkpoints/*
+!checkpoints/README.md
+!checkpoints/.gitkeep
+
+weights/*
+!weights/README.md
+!weights/.gitkeep
+
+# =========================
+# Experiment outputs
+# =========================
+experiments/
+experiments_deep/
+experiments_interval/
+
+# Keep documentation if you create it
+!experiments/README.md
+!experiments_deep/README.md
+!experiments_interval/README.md
+
+runs/
+outputs/
+output/
+wandb/
+mlruns/
+lightning_logs/
+tensorboard/
+tb_logs/
+
+results/raw/
+results/cache/
+results/tmp/
+results/runs/
+results/outputs/
+
+# =========================
+# Large archives
+# =========================
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# =========================
+# Web/app cache
+# =========================
+.flaskenv
+instance/
+*.db
+*.sqlite
+*.sqlite3
